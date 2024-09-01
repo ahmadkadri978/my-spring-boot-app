@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Registration Confirmation</title>
+	<!-- Bootstrap CSS -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+	<style>
+		body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        .list-group-item {
+            border-color: #dee2e6;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+	</style>
+</head>
+
+<body class="p-3">
+
+<div class="container">
+	<h2 class="mb-4">User registered successfully!</h2>
+
+	<!-- Display user details -->
+	<ul class="list-group mb-4">
+		<li class="list-group-item">User name: <span th:text="${webUser.userName}"></span></li>
+		<li class="list-group-item">First name: <span th:text="${webUser.firstName}"></span></li>
+		<li class="list-group-item">Last name: <span th:text="${webUser.lastName}"></span></li>
+		<li class="list-group-item">Email: <span th:text="${webUser.email}"></span></li>
+	</ul>
+
+	<hr>
+
+	<!-- Login button -->
+	<a href="#" class="btn btn-primary" th:href="@{showMyLoginPage}">Login with new user name</a>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

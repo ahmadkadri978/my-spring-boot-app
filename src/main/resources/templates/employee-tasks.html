@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Employee Tasks</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        h1 {
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+
+        .table {
+            background-color: #ffffff;
+        }
+
+        .table th {
+            background-color: #007bff;
+            color: #ffffff;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(0, 0, 0, .05);
+        }
+
+        .form-label {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .btn-info {
+            background-color: #17a2b8;
+            border-color: #17a2b8;
+        }
+
+        .btn-info:hover {
+            background-color: #138496;
+            border-color: #117a8b;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Tasks for Employee: <span th:text="${employee.firstName} + ' ' + ${employee.lastName}"></span></h1>
+    <a th:if="${#authorization.expression('hasRole(''MANAGER'')')}" th:href="@{/employee/{employeeId}/addtask(employeeId=${employee.id})}" class="btn btn-primary mb-3" role="button">Add Task</a>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Description</th>
+            <th>Complete</th>
+            <th>Report</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="task : ${tasks}">
+            <td th:text="${task.description}"></td>
+            <td th:text="${task.complete} ? 'Yes' : 'No'"></td>
+            <td th:text="${task.report} ? 'Yes' : 'No'"></td>
+            <td>
+                <div th:if="${#authorization.expression('hasRole(''MANAGER'')')}">
+                    <a th:href="@{/employee/{employeeId}/task/{taskId}/edit(employeeId=${employee.id}, taskId=${task.id})}" class="btn btn-sm btn-primary" role="button">Edit</a>
+                    <a th:href="@{/employee/{employeeId}/task/{taskId}/delete(employeeId=${employee.id}, taskId=${task.id})}" class="btn btn-sm btn-danger" role="button" onclick="return confirm('Are you sure?')">Delete</a>
+                    <a th:if="${task.report != null}" th:href="@{/employee/{employeeId}/task/{taskId}/downloadReport(employeeId=${employee.id} , taskId=${task.id})}" class="btn btn-success btn-sm manager-btn">Download Report</a>
+                </div>
+                <div th:if="${#authorization.expression('hasRole(''EMPLOYEE'')')}" class="container">
+                    <form th:action="@{/employee/{employeeId}/task/{taskId}/uploadReport(employeeId=${employee.id}, taskId=${task.id})}"  method="post" enctype="multipart/form-data" class="mb-1">
+                        <div th:if="${employee.tasks !=null}">
+                            <div class="mb-3">
+                                <label for="file" class="form-label">Choose File:</label>
+                                <div class="input-group">
+                                    <input type="file" class="form-control" id="file" name="reportFile">
+                                    <label class="input-group-text" for="file">Browse</label>
+                                </div>
+                                <small class="form-text text-muted">Maximum file size: 5MB</small>
+                            </div>
+                            <div th:if="${#authorization.expression('hasRole(''EMPLOYEE'')')}" class="mb-3">
+                                <a th:if="${task.report != null}" th:href="@{/employee/{employeeId}/task/{taskId}/deleteReport(employeeId=${employee.id} , taskId=${task.id})}" class="btn btn-success btn-sm manager-btn">Delete Report</a>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-column flex-md-row justify-content-between">
+                            <div class="mb-5 mb-md-0">
+                                <button type="submit" class="btn btn-info btn-sm mb-1">
+                                    <span class="d-none d-md-inline">Upload Report</span>
+                                    <span class="d-inline d-md-none">Report</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <hr>
+    <a href="/list" class="btn btn-info">Back to List</a>
+</div>
+</body>
+</html>
+

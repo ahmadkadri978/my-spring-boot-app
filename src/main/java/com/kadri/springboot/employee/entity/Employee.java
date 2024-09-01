@@ -1,0 +1,109 @@
+package com.kadri.springboot.employee.entity;
+
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name="employee")
+public class Employee {
+
+    // define fields
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="id")
+    private int id;
+
+    @Column(name="first_name")
+    private String firstName;
+
+    @Column(name="last_name")
+    private String lastName;
+
+    @Column(name="email")
+    private String email;
+
+    // Define the relationship with tasks
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL )
+    private List<Task> tasks;
+
+
+    // define constructors
+    public Employee() {
+
+    }
+
+
+    public Employee( String firstName, String lastName, String email, List<Task> tasks) {
+
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.tasks = tasks;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
+    }
+    public void add(Task tempTask , Employee employee){
+        if(tasks == null) tasks = new ArrayList<>();
+        tasks.add(tempTask);
+        tempTask.setEmployee(employee);
+    }
+
+    // define toString
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
+}
+
+
+
+
+
+
+
+
